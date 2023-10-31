@@ -23,16 +23,15 @@ public class ProductController {
     public ResponseEntity<Object> sparQl() {
         String queryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
                 "PREFIX Projet-sem: <http://www.semanticweb.org/aminebarguellil/ontologies/2023/9/Projet-sem#>\n" +
-                "SELECT ?id ?name ?description ?price ?quantity ?weight ?image_url \n" +
+                "SELECT ?idProduct ?name ?description ?price ?quantity ?weight  \n" +
                 "WHERE {\n" +
                 "  ?produit rdf:type Projet-sem:Produit .\n" +
-                "  ?produit Projet-sem:id ?id .\n" +
+                "  ?produit Projet-sem:idProduct ?idProduct .\n" +
                 "  ?produit Projet-sem:name ?name .\n" +
                 "  ?produit Projet-sem:description ?description .\n" +
                 "  ?produit Projet-sem:price ?price .\n" +
                 "  ?produit Projet-sem:quantity ?quantity .\n" +
                 "  ?produit Projet-sem:weight ?weight .\n" +
-                "  ?produit Projet-sem:image_url ?image_url .\n"+
                 "}";
 
 
@@ -47,22 +46,22 @@ public class ProductController {
 
             while (results.hasNext()) {
                 QuerySolution solution = results.next();
-                RDFNode id = solution.get("id");
+                RDFNode idProduct = solution.get("idProduct");
                 RDFNode name = solution.get("name");
                 RDFNode description = solution.get("description");
                 RDFNode price = solution.get("price");
                 RDFNode quantity = solution.get("quantity");
                 RDFNode weight = solution.get("weight");
-                RDFNode image_url = solution.get("image_url");
+                //RDFNode image_url = solution.get("image_url");
 
                 Map<String, Object> resultItem = new HashMap<>();
-                resultItem.put("id", id.toString());
+                resultItem.put("idProduct", idProduct.toString());
                 resultItem.put("name", name.toString());
                 resultItem.put("description", description.toString());
                 resultItem.put("price", price.toString());
                 resultItem.put("quantity", quantity.toString());
                 resultItem.put("weight", weight.toString());
-                resultItem.put("image_url", image_url.toString());
+                //resultItem.put("image_url", image_url.toString());
 
                 queryResults.add(resultItem);
             }
