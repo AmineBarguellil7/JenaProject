@@ -20,6 +20,8 @@ import org.apache.jena.rdf.model.Model;
 @RestController
 @RequestMapping("/article")
 @CrossOrigin(origins = "http://localhost:4200")
+
+
 public class ArticleController {
     @GetMapping("/query")
     public ResponseEntity<Object> performQuery() {
