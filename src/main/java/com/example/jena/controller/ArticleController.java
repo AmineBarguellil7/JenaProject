@@ -3,18 +3,12 @@ package com.example.jena.controller;
 
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.update.UpdateAction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.jena.rdf.model.Model;
-
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 @RestController
@@ -26,13 +20,14 @@ public class ArticleController {
         // Define a SPARQL query
         String queryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
                 "PREFIX Projet-sem: <http://www.semanticweb.org/aminebarguellil/ontologies/2023/9/Projet-sem#>\n" +
-                "SELECT ?id ?titreArticle ?contenu ?auteur\n" +
+                "SELECT ?id ?titreArticle ?contenu ?auteur ?datePublication\n" +
                 "WHERE {\n" +
                 "  ?article rdf:type Projet-sem:Article .\n" +
                 "  ?article Projet-sem:id ?id .\n" +
                 "  ?article Projet-sem:titreArticle ?titreArticle .\n" +
                 "  ?article Projet-sem:contenu ?contenu .\n" +
                 "  ?article Projet-sem:auteur ?auteur .\n" +
+                "  ?article Projet-sem:datePublication ?datePublication .\n" +
                 "}";
 
         // Define the Fuseki service endpoint
@@ -56,12 +51,24 @@ public class ArticleController {
                 RDFNode titreArticle = solution.get("titreArticle");
                 RDFNode contenu = solution.get("contenu");
                 RDFNode auteur = solution.get("auteur");
+                RDFNode datePublication = solution.get("datePublication");
 
                 Map<String, Object> resultItem = new HashMap<>();
                 resultItem.put("id", id.toString());
                 resultItem.put("titreArticle", titreArticle.toString());
                 resultItem.put("contenu", contenu.toString());
                 resultItem.put("auteur", auteur.toString());
+                String datePublicationStr = datePublication.toString();
+                SimpleDateFormat rdfDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                SimpleDateFormat outputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date date = rdfDateFormat.parse(datePublicationStr);
+                    resultItem.put("datePublication", outputDateFormat.format(date));
+                } catch (java.text.ParseException e) {
+                    e.printStackTrace();
+                    // Handle date parsing error
+                    resultItem.put("datePublication", "Invalid Date");
+                }
 
                 // Add the resultItem to the queryResults list
                 queryResults.add(resultItem);
@@ -180,42 +187,80 @@ public class ArticleController {
     }
 
 
-    private final String fusekiUpdateEndpoint = "http://localhost:3030/ds/";
-    @PostMapping("/addArticle")
-    public ResponseEntity<String> addArticle(@RequestBody Map<String, Object> articleData) {
-        try {
-            // Récupérez les données de l'article à partir de la Map
-            String titreArticle = articleData.get("titreArticle").toString();
-            String contenu = articleData.get("contenu").toString();
-            String auteur = articleData.get("auteur").toString();
 
-            // Effectuez la requête SPARQL d'insertion pour ajouter l'article à votre triplestore
-            String queryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
-                    "PREFIX Projet-sem: <http://www.semanticweb.org/aminebarguellil/ontologies/2023/9/Projet-sem#>\n" +
-                    "INSERT DATA {\n" +
-                    "  _:article rdf:type Projet-sem:Article .\n" +
-                    "  _:article Projet-sem:titreArticle '" + titreArticle + "' .\n" +
-                    "  _:article Projet-sem:contenu '" + contenu + "' .\n" +
-                    "  _:article Projet-sem:auteur '" + auteur + "' .\n" +
-                    "}";
+    @GetMapping("/articlesByDatePublication")
+    public ResponseEntity<Object> getArticlesByDatePublication(@RequestParam(value = "filter", required = false) String filter) {
 
-            // Utilisez DatasetAccessor pour accéder à la base de données RDF
-            DatasetAccessor accessor = DatasetAccessorFactory.createHTTP(fusekiUpdateEndpoint);
 
-            // Chargez le modèle actuel depuis la base de données
-            Model model = accessor.getModel();
+        String orderByClause = "";
 
-            // Exécutez la requête SPARQL d'insertion en utilisant UpdateAction
-            UpdateAction.parseExecute(queryString, model);
+        // Determine the sorting order based on the filter parameter
+        if (filter != null && filter.equalsIgnoreCase("recent")) {
+            orderByClause = "DESC(?datePublication)";
+        } else if (filter != null && filter.equalsIgnoreCase("oldest")) {
+            orderByClause = "ASC(?datePublication)";
+        }
 
-            // Si l'insertion a réussi, vous pouvez renvoyer une réponse appropriée
-            return new ResponseEntity<>("Article ajouté avec succès", HttpStatus.OK);
+
+
+        String queryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+                "PREFIX Projet-sem: <http://www.semanticweb.org/aminebarguellil/ontologies/2023/9/Projet-sem#>\n" +
+                "SELECT ?id ?titreArticle ?contenu ?auteur ?datePublication\n" +
+                "WHERE {\n" +
+                "  ?article rdf:type Projet-sem:Article .\n" +
+                "  ?article Projet-sem:id ?id .\n" +
+                "  ?article Projet-sem:titreArticle ?titreArticle .\n" +
+                "  ?article Projet-sem:contenu ?contenu .\n" +
+                "  ?article Projet-sem:auteur ?auteur .\n" +
+                "  ?article Projet-sem:datePublication ?datePublication .\n" +
+                "}\n" +
+                (orderByClause.isEmpty() ? "" : "ORDER BY " + orderByClause);
+
+
+        String serviceEndpoint = "http://localhost:3030/ds/sparql";
+
+        Query query = QueryFactory.create(queryString);
+        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(serviceEndpoint, query)) {
+            ResultSet results = qexec.execSelect();
+
+            List<Object> queryResults = new ArrayList<>();
+
+            while (results.hasNext()) {
+                QuerySolution solution = results.next();
+                RDFNode id = solution.get("id");
+                RDFNode titreArticle = solution.get("titreArticle");
+                RDFNode contenu = solution.get("contenu");
+                RDFNode auteur = solution.get("auteur");
+                RDFNode datePublication = solution.get("datePublication");
+
+                Map<String, Object> resultItem = new HashMap<>();
+                resultItem.put("id", id.toString());
+                resultItem.put("titreArticle", titreArticle.toString());
+                resultItem.put("contenu", contenu.toString());
+                resultItem.put("auteur", auteur.toString());
+                String datePublicationStr = datePublication.toString();
+                SimpleDateFormat rdfDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                SimpleDateFormat outputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date date = rdfDateFormat.parse(datePublicationStr);
+                    resultItem.put("datePublication", outputDateFormat.format(date));
+                } catch (java.text.ParseException e) {
+                    e.printStackTrace();
+                    // Handle date parsing error
+                    resultItem.put("datePublication", "Invalid Date");
+                }
+
+                queryResults.add(resultItem);
+
+                System.out.println(queryResults);
+            }
+
+            return new ResponseEntity<>(queryResults, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>("Erreur lors de l'ajout de l'article", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
 
 }
