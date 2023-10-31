@@ -163,9 +163,9 @@ public class ProductController {
                 resultItem.put("idProduct", idProduct.toString());
                 resultItem.put("name", nameResult.toString());
                 resultItem.put("description", description.toString());
-                resultItem.put("price", price.toString());
-                resultItem.put("quantity", quantity.toString());
-                resultItem.put("weight", weight.toString());
+                resultItem.put("price", Double.parseDouble(price.toString().split("\\^")[0]));
+                resultItem.put("quantity", Double.parseDouble(quantity.toString().split("\\^")[0]));
+                resultItem.put("weight", Double.parseDouble(weight.toString().split("\\^")[0]));
 
                 queryResults.add(resultItem);
             }
@@ -220,9 +220,9 @@ public class ProductController {
                 resultItem.put("idProduct", idProduct.toString());
                 resultItem.put("name", nameResult.toString());
                 resultItem.put("description", description.toString());
-                resultItem.put("price", price.toString());
-                resultItem.put("quantity", quantity.toString());
-                resultItem.put("weight", weight.toString());
+                resultItem.put("price", Double.parseDouble(price.toString().split("\\^")[0]));
+                resultItem.put("quantity", Double.parseDouble(quantity.toString().split("\\^")[0]));
+                resultItem.put("weight", Double.parseDouble(weight.toString().split("\\^")[0]));
 
                 queryResults.add(resultItem);
             }
