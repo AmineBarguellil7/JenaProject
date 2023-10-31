@@ -64,7 +64,7 @@ public class ProductCategorie {
                 "  ?categorie rdf:type Projet-sem:CategorieProduit .\n" +
                 "  ?categorie Projet-sem:nameCategorie ?nameCategorie .\n" +
                 "  ?categorie Projet-sem:DescriptionCategorie ?DescriptionCategorie .\n" +
-                "  FILTER (?name = \"" + nameparam + "\")\n" +
+                "  FILTER (?nameCategorie = \"" + nameparam + "\")\n" +
                 "}";
 
         String serviceEndpoint = "http://localhost:3030/ds/sparql";
@@ -93,5 +93,6 @@ public class ProductCategorie {
             return new ResponseEntity<>("Error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 }
