@@ -58,9 +58,9 @@ public class ProductController {
                 resultItem.put("idProduct", idProduct.toString());
                 resultItem.put("name", name.toString());
                 resultItem.put("description", description.toString());
-                resultItem.put("price", price.toString());
-                resultItem.put("quantity", quantity.toString());
-                resultItem.put("weight", weight.toString());
+                resultItem.put("price", Double.parseDouble(price.toString().split("\\^")[0]));
+                resultItem.put("quantity", Double.parseDouble(quantity.toString().split("\\^")[0]));
+                resultItem.put("weight", Double.parseDouble(weight.toString().split("\\^")[0]));
 
 
                 queryResults.add(resultItem);
@@ -110,9 +110,9 @@ public class ProductController {
                 resultItem.put("idProduct", idProduct.toString());
                 resultItem.put("name", nameResult.toString());
                 resultItem.put("description", description.toString());
-                resultItem.put("price", price.toString());
-                resultItem.put("quantity", quantity.toString());
-                resultItem.put("weight", weight.toString());
+                resultItem.put("price", Double.parseDouble(price.toString().split("\\^")[0]));
+                resultItem.put("quantity", Double.parseDouble(quantity.toString().split("\\^")[0]));
+                resultItem.put("weight", Double.parseDouble(weight.toString().split("\\^")[0]));
 
                 queryResults.add(resultItem);
             }
@@ -139,7 +139,7 @@ public class ProductController {
                 "  ?produit Projet-sem:price ?price .\n" +
                 "  ?produit Projet-sem:quantity ?quantity .\n" +
                 "  ?produit Projet-sem:weight ?weight .\n" +
-                (minPrice != null ? "  FILTER (?price > " + minPrice + ").\n" : "") +
+                (minPrice != null ? "  FILTER (SUBSTR(STR(?price), 1, 2) = '" + minPrice.toString().substring(0, 2) + "').\n" : "") +
                 "}";
 
         String serviceEndpoint = "http://localhost:3030/ds/sparql";
@@ -176,6 +176,8 @@ public class ProductController {
             return new ResponseEntity<>("Error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
 
     @GetMapping("/productsByCategory")
     public ResponseEntity<Object> getProductsByCategory(@RequestParam(value = "category", required = false) String category) {
