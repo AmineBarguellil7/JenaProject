@@ -53,6 +53,7 @@ public class ProductController {
                 RDFNode quantity = solution.get("quantity");
                 RDFNode weight = solution.get("weight");
 
+
                 Map<String, Object> resultItem = new HashMap<>();
                 resultItem.put("idProduct", idProduct.toString());
                 resultItem.put("name", name.toString());
@@ -60,6 +61,7 @@ public class ProductController {
                 resultItem.put("price", Double.parseDouble(price.toString().split("\\^")[0]));
                 resultItem.put("quantity", Double.parseDouble(quantity.toString().split("\\^")[0]));
                 resultItem.put("weight", Double.parseDouble(weight.toString().split("\\^")[0]));
+
 
                 queryResults.add(resultItem);
             }
