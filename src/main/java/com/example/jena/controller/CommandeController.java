@@ -20,17 +20,15 @@ public class CommandeController {
         // Define a SPARQL query to retrieve specific properties of the Commande individual
         String queryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
                 "PREFIX Projet-sem: <http://www.semanticweb.org/aminebarguellil/ontologies/2023/9/Projet-sem#>\n" +
-                "SELECT  ?idCommande ?deliveryAddress ?quantity ?codePromo ?totalPrice\n" +
+                "SELECT ?idCommande ?deliveryAddress ?quantity ?codePromo ?totalPrice\n" +
                 "WHERE {\n" +
-
-                "  <http://www.semanticweb.org/aminebarguellil/ontologies/2023/9/Projet-sem#commande1> rdf:type Projet-sem:Commande .\n" +
-                "  <http://www.semanticweb.org/aminebarguellil/ontologies/2023/9/Projet-sem#commande1> Projet-sem:id_commande ?idCommande .\n" +
-                "  <http://www.semanticweb.org/aminebarguellil/ontologies/2023/9/Projet-sem#commande1> Projet-sem:delivery_address ?deliveryAddress .\n" +
-                "  <http://www.semanticweb.org/aminebarguellil/ontologies/2023/9/Projet-sem#commande1> Projet-sem:quantityC ?quantity .\n" +
-                "  <http://www.semanticweb.org/aminebarguellil/ontologies/2023/9/Projet-sem#commande1> Projet-sem:code_promo ?codePromo .\n" +
-                "  <http://www.semanticweb.org/aminebarguellil/ontologies/2023/9/Projet-sem#commande1> Projet-sem:total_price ?totalPrice .\n" +
+                "  ?commande rdf:type Projet-sem:Commande .\n" +
+                "  ?commande Projet-sem:id_commande ?idCommande .\n" +
+                "  ?commande Projet-sem:delivery_address ?deliveryAddress .\n" +
+                "  ?commande Projet-sem:quantityC ?quantity .\n" +
+                "  ?commande Projet-sem:code_promo ?codePromo .\n" +
+                "  ?commande Projet-sem:total_price ?totalPrice .\n" +
                 "}";
-
 
         String serviceEndpoint = "http://localhost:3030/ds/sparql"; // Replace with your dataset name
 
@@ -56,7 +54,7 @@ public class CommandeController {
                 resultItem.put("idCommande", idCommande.asLiteral().getLong()); // Convert to long
                 resultItem.put("deliveryAddress", deliveryAddress.toString());
                 resultItem.put("quantity", quantity.asLiteral().getInt()); // Convert to int
-                resultItem.put("codePromo", codePromo.toString());
+                resultItem.put("codePromo", codePromo.asLiteral().getInt());
                 resultItem.put("totalPrice", totalPrice.asLiteral().getFloat()); // Convert to float
 
                 // Add the resultItem to the queryResults list
@@ -111,7 +109,7 @@ public class CommandeController {
                 resultItem.put("idCommande", idCommande.asLiteral().getLong()); // Convert to long
                 resultItem.put("deliveryAddress", deliveryAddress.toString());
                 resultItem.put("quantity", quantity.asLiteral().getInt()); // Convert to int
-                resultItem.put("codePromo", codePromo.toString());
+                resultItem.put("codePromo", codePromo.asLiteral().getInt());
                 resultItem.put("totalPrice", totalPrice.asLiteral().getFloat()); // Convert to float
 
                 // Add the resultItem to the queryResults list
@@ -167,7 +165,7 @@ public class CommandeController {
                 resultItem.put("idCommande", idCommande.asLiteral().getLong()); // Convert to long
                 resultItem.put("deliveryAddress", deliveryAddress.toString());
                 resultItem.put("quantity", quantity.asLiteral().getInt()); // Convert to int
-                resultItem.put("codePromo", codePromo.toString());
+                resultItem.put("codePromo", codePromo.asLiteral().getInt());
                 resultItem.put("totalPrice", totalPrice.asLiteral().getFloat()); // Convert to float
 
                 // Add the resultItem to the queryResults list
@@ -223,7 +221,7 @@ public class CommandeController {
                 resultItem.put("idCommande", idCommande.asLiteral().getLong()); // Convert to long
                 resultItem.put("deliveryAddress", deliveryAddress.toString());
                 resultItem.put("quantity", quantity.asLiteral().getInt()); // Convert to int
-                resultItem.put("codePromo", codePromo.toString());
+                resultItem.put("codePromo", codePromo.asLiteral().getInt());
                 resultItem.put("totalPrice", totalPrice.asLiteral().getFloat()); // Convert to float
 
                 // Add the resultItem to the queryResults list

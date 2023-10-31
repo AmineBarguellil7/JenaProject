@@ -44,7 +44,7 @@ public class CouponCommandeController {
                 RDFNode codePromo = solution.get("codePromo");
 
                 Map<String, Object> resultItem = new HashMap<>();
-                resultItem.put("codePromo", codePromo.toString());
+                resultItem.put("codePromo", codePromo.asLiteral().getInt());
 
                 // Add the resultItem to the queryResults list
                 queryResults.add(resultItem);
