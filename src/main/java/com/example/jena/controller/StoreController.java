@@ -164,6 +164,50 @@ public class StoreController {
             return new ResponseEntity<>("Error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping("/latestPromotion")
+    public ResponseEntity<Object> getLatestPromotion() {
+        String queryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+                "PREFIX Projet-sem: <http://www.semanticweb.org/aminebarguellil/ontologies/2023/9/Projet-sem#>\n" +
+                "SELECT ?nameStore ?percentage ?endDate\n" +
+                "WHERE {\n" +
+                "  ?boutique rdf:type Projet-sem:Boutique .\n" +
+                "  ?boutique Projet-sem:nameStore ?nameStore .\n" +
+                "  ?boutique Projet-sem:offre ?promotion .\n" +
+                "  ?promotion rdf:type Projet-sem:Promotion .\n" +
+                "  ?promotion Projet-sem:percentage ?percentage .\n" +
+                "  ?promotion Projet-sem:endDate ?endDate .\n" +
+                "}\n" +
+                "ORDER BY DESC(?endDate)\n" +
+                "LIMIT 1";
+
+        String serviceEndpoint = "http://localhost:3030/ds/sparql"; // Replace with your dataset endpoint
+
+        Query query = QueryFactory.create(queryString);
+        try (QueryExecution qexec = QueryExecutionFactory.sparqlService(serviceEndpoint, query)) {
+            ResultSet results = qexec.execSelect();
+            List<Object> queryResults = new ArrayList<>();
+
+            while (results.hasNext()) {
+                QuerySolution solution = results.next();
+                RDFNode nameStore = solution.get("nameStore");
+                RDFNode percentage = solution.get("percentage");
+                RDFNode endDate = solution.get("endDate");
+
+                Map<String, Object> resultItem = new HashMap<>();
+                resultItem.put("nameStore", nameStore.toString());
+                resultItem.put("percentage", percentage.toString());
+                resultItem.put("endDate", endDate.toString());
+
+                queryResults.add(resultItem);
+            }
+
+            return new ResponseEntity<>(queryResults, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 
 }
