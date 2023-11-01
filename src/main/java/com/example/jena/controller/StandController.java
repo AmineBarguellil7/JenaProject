@@ -71,7 +71,7 @@ public class StandController {
     }
 
     @GetMapping("/standByStatus")
-    public ResponseEntity<Object> getArticlesByTitre(@RequestParam(value = "SearchedStatus", required = false) String SearchedStatus) {
+    public ResponseEntity<Object> getStandByStatus(@RequestParam(value = "SearchedStatus", required = false) String SearchedStatus) {
 
         String queryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
                 "PREFIX Projet-sem: <http://www.semanticweb.org/aminebarguellil/ontologies/2023/9/Projet-sem#>\n" +

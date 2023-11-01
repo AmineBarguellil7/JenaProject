@@ -89,7 +89,7 @@ public class EventController {
     }
 
     @GetMapping("/eventByName")
-    public ResponseEntity<Object> getArticlesByTitre(@RequestParam(value = "name_event", required = false) String name) {
+    public ResponseEntity<Object> getEventByName(@RequestParam(value = "nameevent", required = false) String nameevent) {
 
         String queryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
                 "PREFIX Projet-sem: <http://www.semanticweb.org/aminebarguellil/ontologies/2023/9/Projet-sem#>\n" +
@@ -102,7 +102,7 @@ public class EventController {
                 "  ?event Projet-sem:end_date ?end_date .\n" +
                 "  ?event Projet-sem:location ?location .\n" +
                 "  ?event Projet-sem:entry_price ?entry_price .\n" +
-                (name!= null && !name.isEmpty() ? "  FILTER regex(?name_event, '" + name + "', 'i').\n" : "") +
+                (nameevent!= null && !nameevent.isEmpty() ? "  FILTER regex(?name_event, '" + nameevent + "', 'i').\n" : "") +
                 "}";
 
 
@@ -145,7 +145,7 @@ public class EventController {
 
 
     @GetMapping("/eventByLocation")
-    public ResponseEntity<Object> getArticlesByCategory(@RequestParam(value = "location", required = true) String locationn) {
+    public ResponseEntity<Object> getEventByLocation(@RequestParam(value = "location", required = true) String locationn) {
         String queryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
                 "PREFIX Projet-sem: <http://www.semanticweb.org/aminebarguellil/ontologies/2023/9/Projet-sem#>\n" +
                 "SELECT ?id_event ?name_event ?start_date ?end_date ?location ?entry_price\n" +
@@ -212,7 +212,7 @@ public class EventController {
 
 
     @GetMapping("/eventByStartDate")
-    public ResponseEntity<Object> getArticlesByDatePublication(@RequestParam(value = "filter", required = false) String filter) {
+    public ResponseEntity<Object> getEventByStartDate(@RequestParam(value = "filter", required = false) String filter) {
 
 
         String orderByClause = "";
