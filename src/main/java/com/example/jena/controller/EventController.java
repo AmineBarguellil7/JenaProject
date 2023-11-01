@@ -59,7 +59,7 @@ public class EventController {
                 resultItem.put("id_event", id_event.toString());
                 resultItem.put("name_event", name_event.toString());
                 resultItem.put("location", location.toString());
-                resultItem.put("entry_price", entry_price.toString());
+                resultItem.put("entry_price", Double.parseDouble(entry_price.toString().split("\\^")[0]));
                 String startdate = start_date.toString();
                 String enddate = end_date.toString();
                 SimpleDateFormat rdfDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -127,8 +127,7 @@ public class EventController {
                 resultItem.put("id_event", id_event.toString());
                 resultItem.put("name_event", name_event.toString());
                 resultItem.put("location", location.toString());
-                resultItem.put("entry_price", entry_price.toString());
-
+                resultItem.put("entry_price", Double.parseDouble(entry_price.toString().split("\\^")[0]));
 
                 queryResults.add(resultItem);
 
@@ -182,7 +181,7 @@ public class EventController {
                 resultItem.put("id_event", id_event.toString());
                 resultItem.put("name_event", name_event.toString());
                 resultItem.put("location", location.toString());
-                resultItem.put("entry_price", entry_price.toString());
+                resultItem.put("entry_price", Double.parseDouble(entry_price.toString().split("\\^")[0]));
                 String startdate = start_date.toString();
                 String enddate = end_date.toString();
                 SimpleDateFormat rdfDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -262,7 +261,7 @@ public class EventController {
                 resultItem.put("id_event", id_event.toString());
                 resultItem.put("name_event", name_event.toString());
                 resultItem.put("location", location.toString());
-                resultItem.put("entry_price", entry_price.toString());
+                resultItem.put("entry_price", Double.parseDouble(entry_price.toString().split("\\^")[0]));
                 String startdate = start_date.toString();
                 String enddate = end_date.toString();
                 SimpleDateFormat rdfDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");

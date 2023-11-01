@@ -55,7 +55,7 @@ public class StandController {
                 resultItem.put("id_stand", id_stand.toString());
                 resultItem.put("numero", numero.toString());
                 resultItem.put("emplacement", emplacement.toString());
-                resultItem.put("tarif_de_location", tarif_de_location.toString());
+                resultItem.put("tarif_de_location", Double.parseDouble(tarif_de_location.toString().split("\\^")[0]));
                 resultItem.put("status", status.toString());
                 // Add the resultItem to the queryResults list
                 queryResults.add(resultItem);
@@ -109,7 +109,7 @@ public class StandController {
                 resultItem.put("id_stand", id_stand.toString());
                 resultItem.put("numero", numero.toString());
                 resultItem.put("emplacement", emplacement.toString());
-                resultItem.put("tarif_de_location", tarif_de_location.toString());
+                resultItem.put("tarif_de_location", Double.parseDouble(tarif_de_location.toString().split("\\^")[0]));
                 resultItem.put("status", status.toString());
                 // Add the resultItem to the queryResults list
                 queryResults.add(resultItem);
